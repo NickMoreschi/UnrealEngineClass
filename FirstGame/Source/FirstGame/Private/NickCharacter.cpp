@@ -2,6 +2,9 @@
 
 
 #include "NickCharacter.h"
+//Include the 2 created character components
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 ANickCharacter::ANickCharacter()
@@ -9,6 +12,17 @@ ANickCharacter::ANickCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Creating 2 components of the created character
+
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
+	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
+
+	//Attaching the spring arm to the root of the character, this also acts as the "distance" between the character and the actual camera
+	//Root component is the first component within the hierarchy of the character components
+	//Has collision checks built in so the camera is never blocked
+	SpringArmComp->SetupAttachment(RootComponent);
+	//Attaching the camera to the "distance" (spring arm component) between the character and the camera
+	CameraComp->SetupAttachment(SpringArmComp);
 }
 
 // Called when the game starts or when spawned

@@ -6,6 +6,10 @@
 #include "GameFramework/Character.h"
 #include "NickCharacter.generated.h"
 
+//Initilize the 2 classes
+class UCameraComponent;
+class USpringArmComponent;
+
 UCLASS()
 class FIRSTGAME_API ANickCharacter : public ACharacter
 {
@@ -16,6 +20,14 @@ public:
 	ANickCharacter();
 
 protected:
+	//Declare the two components in protected because they wont be needed elsewhere
+	//UProperty is an unreal macro that gives it customizability within the GUI in the engine to see the varaibles/properties for the components
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* CameraComp;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
