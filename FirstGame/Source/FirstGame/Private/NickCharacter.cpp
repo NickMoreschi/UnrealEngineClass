@@ -32,6 +32,13 @@ void ANickCharacter::BeginPlay()
 	
 }
 
+void ANickCharacter::MoveForward(float Value)
+{
+	//AddMovementInput is built into the engine that takes in parameters to directly change the movement of the current "actor"
+	//GetActorForwardVector returns whatever direction the current "actor" is pointing in
+	AddMovementInput(GetActorForwardVector(), Value);
+}
+
 // Called every frame
 void ANickCharacter::Tick(float DeltaTime)
 {
@@ -44,5 +51,10 @@ void ANickCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	//Create the MoveForward fuction to add forward and backwards movement based on the current vector (+1.0 or -1.0)
+	PlayerInputComponent->BindAxis("MoveForward", this, &ANickCharacter::MoveForward);
+
+	//Calling a created function within the pawn class to add turning to the character
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 }
 
