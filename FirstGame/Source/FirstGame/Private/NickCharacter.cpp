@@ -39,6 +39,11 @@ void ANickCharacter::MoveForward(float Value)
 	AddMovementInput(GetActorForwardVector(), Value);
 }
 
+void ANickCharacter::MoveSideways(float Value)
+{
+	AddMovementInput(GetActorRightVector(), Value);
+}
+
 // Called every frame
 void ANickCharacter::Tick(float DeltaTime)
 {
@@ -53,8 +58,10 @@ void ANickCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	//Create the MoveForward fuction to add forward and backwards movement based on the current vector (+1.0 or -1.0)
 	PlayerInputComponent->BindAxis("MoveForward", this, &ANickCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveSideways", this, &ANickCharacter::MoveSideways);
 
 	//Calling a created function within the pawn class to add turning to the character
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
 }
 
