@@ -33,6 +33,7 @@ protected:
 
 	void MoveForward(float Value);
 	void MoveSideways(float Value);
+	void Jump(float Value);
 
 public:	
 	// Called every frame
