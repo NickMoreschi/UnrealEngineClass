@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "NickCharacter.generated.h"
 
-//Initilize the 2 classes
+//Initialize the 2 classes
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -21,19 +21,22 @@ public:
 
 protected:
 	//Declare the two components in protected because they wont be needed elsewhere
-	//UProperty is an unreal macro that gives it customizability within the GUI in the engine to see the varaibles/properties for the components
+	//UProperty is an unreal macro that gives it customization within the GUI in the engine to see/edit the variables/properties for the components
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void MoveForward(float Value);
 	void MoveSideways(float Value);
-	void Jump(float Value);
+	void PrimaryAttack();
 
 public:	
 	// Called every frame

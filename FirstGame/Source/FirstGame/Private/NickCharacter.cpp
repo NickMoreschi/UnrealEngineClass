@@ -41,6 +41,29 @@ void ANickCharacter::BeginPlay()
 	
 }
 
+// Called every frame
+void ANickCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+// Called to bind functionality to input
+void ANickCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	//Create the MoveForward function to add forward and backwards movement based on the current vector (+1.0 or -1.0)
+	PlayerInputComponent->BindAxis("MoveForward", this, &ANickCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveSideways", this, &ANickCharacter::MoveSideways);
+
+	//Calling a created function within the pawn class to add turning to the character
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ANickCharacter::PrimaryAttack);
+}
+
 void ANickCharacter::MoveForward(float Value)
 {
 	FRotator ControlRotation = GetControlRotation();
@@ -66,40 +89,22 @@ void ANickCharacter::MoveSideways(float Value)
 	AddMovementInput(RightVector, Value);
 }
 
-void ANickCharacter::Jump(float Value)
+void ANickCharacter::PrimaryAttack()
 {
-	FRotator ControlRotation = GetControlRotation();
-	ControlRotation.Pitch = 0.0f;
-	ControlRotation.Roll = 0.0f;
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
-	//need to include the library for access which means slower compilation time in the long run because includes will add up, but this is better for readability
-	FVector VerticalVector = UKismetMathLibrary::GetUpVector(ControlRotation);
+	//Control rotation is the current direction the character is pointing at
+	//Actor location is the center of the current character
+	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
 
-	//directly copy/pasting the code from the library which is faster because of no include but is less readable 
-	//FVector RightVector = FRotationMatrix(ControlRotation).GetScaledAxis(EAxis::Y);
+	FActorSpawnParameters SpawnParameters;
+	//When an actor is spawned into the world, by default it will check the spawn location for any collision and not spawn if there is overlap
+	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	AddMovementInput(VerticalVector, Value);
-}
-
-// Called every frame
-void ANickCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ANickCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	//Create the MoveForward fuction to add forward and backwards movement based on the current vector (+1.0 or -1.0)
-	PlayerInputComponent->BindAxis("MoveForward", this, &ANickCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveSideways", this, &ANickCharacter::MoveSideways);
-	PlayerInputComponent->BindAxis("Jump", this, &ANickCharacter::Jump);
-
-	//Calling a created function within the pawn class to add turning to the character
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
+	//Spawning actors, need to get the current world first
+	//ProjectileClass: Connect to properties within the editor
+	//SpawnTM: How to spawn in the new actor (Direction and location)
+	//SpawnParameters: Properties for what happens on actor spawn
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParameters);
 }
 
