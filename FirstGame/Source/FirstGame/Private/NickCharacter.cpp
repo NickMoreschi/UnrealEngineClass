@@ -56,6 +56,7 @@ void ANickCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	//Create the MoveForward function to add forward and backwards movement based on the current vector (+1.0 or -1.0)
 	PlayerInputComponent->BindAxis("MoveForward", this, &ANickCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveSideways", this, &ANickCharacter::MoveSideways);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ANickCharacter::Jump);
 
 	//Calling a created function within the pawn class to add turning to the character
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
