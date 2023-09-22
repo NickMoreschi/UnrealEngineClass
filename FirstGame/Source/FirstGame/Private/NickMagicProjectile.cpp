@@ -12,6 +12,7 @@ ANickMagicProjectile::ANickMagicProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
+	SphereComp->SetCollisionProfileName("Projectile"); //Created custom collision preset in project settings
 	RootComponent = SphereComp;
 
 	EffectComp = CreateDefaultSubobject< UParticleSystemComponent>("EffectComp");
