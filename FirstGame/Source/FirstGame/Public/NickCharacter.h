@@ -20,6 +20,9 @@ public:
 	ANickCharacter();
 
 protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
 	//Declare the two components in protected because they wont be needed elsewhere
 	//UProperty is an unreal macro that gives it customization within the GUI in the engine to see/edit the variables/properties for the components
 	UPROPERTY(VisibleAnywhere)
@@ -30,9 +33,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> ProjectileClass;
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	void MoveForward(float Value);
 	void MoveSideways(float Value);
