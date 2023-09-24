@@ -7,7 +7,8 @@
 #include "Camera/CameraComponent.h"
 //Only interested in the movement component not the entire character
 #include "GameFramework/CharacterMovementComponent.h"
-#include <Kismet/KismetMathLibrary.h>
+#include "Kismet/KismetMathLibrary.h"
+#include "NickInteractionComponent.h"
 
 // Sets default values
 ANickCharacter::ANickCharacter()
@@ -25,9 +26,10 @@ ANickCharacter::ANickCharacter()
 	SpringArmComp->SetupAttachment(RootComponent);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
-
 	//Attaching the camera to the "distance" (spring arm component) between the character and the camera
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	InteractionComp = CreateDefaultSubobject< UNickInteractionComponent>("InteractionComp");
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	
@@ -63,6 +65,7 @@ void ANickCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ANickCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ANickCharacter::PrimaryInteract);
 }
 
 void ANickCharacter::MoveForward(float Value)
@@ -109,3 +112,10 @@ void ANickCharacter::PrimaryAttack()
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParameters);
 }
 
+void ANickCharacter::PrimaryInteract()
+{
+	if (InteractionComp)
+	{
+		InteractionComp->PrimaryInteract();
+	}
+}

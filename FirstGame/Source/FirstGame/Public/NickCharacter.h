@@ -9,6 +9,7 @@
 //Initialize the 2 classes
 class UCameraComponent;
 class USpringArmComponent;
+class UNickInteractionComponent;
 
 UCLASS()
 class FIRSTGAME_API ANickCharacter : public ACharacter
@@ -34,9 +35,13 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> ProjectileClass;
 
+	UPROPERTY(VisibleAnywhere)
+	UNickInteractionComponent* InteractionComp;
+
 	void MoveForward(float Value);
 	void MoveSideways(float Value);
 	void PrimaryAttack();
+	void PrimaryInteract();
 
 public:	
 	// Called every frame
