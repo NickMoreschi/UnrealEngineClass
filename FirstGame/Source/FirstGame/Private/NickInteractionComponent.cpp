@@ -33,7 +33,6 @@ void UNickInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 
 void UNickInteractionComponent::PrimaryInteract()
 {
-	FHitResult Hit;
 	AActor* MyOwner;
 	FVector EyeLocation;
 	FRotator EyeRotation;
@@ -47,15 +46,33 @@ void UNickInteractionComponent::PrimaryInteract()
 
 	End = EyeLocation + (EyeRotation.Vector()  * 1000);
 
-	GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams); //Returns what was hit (FHitResult) and populates the "Hit" variable
+	//FHitResult Hit;
+	//GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams); //Returns what was hit (FHitResult) and populates the "Hit" variable
 
-	AActor* HitActor = Hit.GetActor();
-	if (HitActor)
+	TArray<FHitResult> Hits;
+	FCollisionShape Shape;
+	float Radius = 30.0f;
+	Shape.SetSphere(Radius);
+	
+	bool bBlockingHit = GetWorld()->SweepMultiByObjectType(Hits, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape);
+
+	FColor LineColor = bBlockingHit ? FColor::Green : FColor::Red;
+
+	for (FHitResult Hit : Hits)
 	{
-		if (HitActor->Implements<UNickGameplayInterface>())
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor)
 		{
-			APawn* MyPawn = Cast<APawn>(MyOwner);
-			INickGameplayInterface::Execute_Interact(HitActor, MyPawn);
+			if (HitActor->Implements<UNickGameplayInterface>())
+			{
+				APawn* MyPawn = Cast<APawn>(MyOwner);
+				INickGameplayInterface::Execute_Interact(HitActor, MyPawn);
+			}
 		}
+
+		DrawDebugSphere(GetWorld(), Hit.Location, Radius, 32, LineColor, false, 2.0f);
+		break; //if theres more than 1 hit, this will make it so only the first one hit will be interacted with
 	}
+
+	DrawDebugLine(GetWorld(), EyeLocation, End, FColor::Red, false, 2.0f, 0, 1.5f);
 }

@@ -95,6 +95,17 @@ void ANickCharacter::MoveSideways(float Value)
 
 void ANickCharacter::PrimaryAttack()
 {
+	PlayAnimMontage(AttackAnimation);
+
+	//Using the timer to delay the attack until the animation is complete
+	//Better method would be to use animation notify
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ANickCharacter::PrimaryAttack_TimeElapsed, 0.2f);
+
+	//GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack); //Used to clear the timer ex: if the character dies in the attack animation
+}
+
+void ANickCharacter::PrimaryAttack_TimeElapsed()
+{
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
 	//Control rotation is the current direction the character is pointing at

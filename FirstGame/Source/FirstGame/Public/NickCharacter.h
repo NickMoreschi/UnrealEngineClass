@@ -10,6 +10,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class UNickInteractionComponent;
+class UAnimMontage;
 
 UCLASS()
 class FIRSTGAME_API ANickCharacter : public ACharacter
@@ -19,6 +20,9 @@ class FIRSTGAME_API ANickCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ANickCharacter();
+
+protected:
+	FTimerHandle TimerHandle_PrimaryAttack;
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,15 +36,19 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(VisibleAnywhere)
 	UNickInteractionComponent* InteractionComp;
 
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnimation;
+
 	void MoveForward(float Value);
 	void MoveSideways(float Value);
 	void PrimaryAttack();
+	void PrimaryAttack_TimeElapsed();
 	void PrimaryInteract();
 
 public:	
